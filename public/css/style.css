@@ -1,0 +1,141 @@
+body {
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f4f4fd;
+}
+
+h1 {
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #969595;
+}
+
+td {
+  background-color: #ffffff;
+}
+
+th.centralizado,
+td.centralizado {
+  text-align: center;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  width: 150px;
+}
+
+button:hover {
+  background-color: #45a040;
+}
+
+button.editar {
+  background-color: #ffa500;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button.editar:hover {
+  background-color: #ff8c00;
+}
+
+button.excluir {
+  background-color: #ff0000;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+button.excluir:hover {
+  background-color: #dc143c;
+}
+
+form {
+  display: inline;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  width: 200px;
+  padding: 5px;
+  margin: 0px 0px 10px 0px;
+  font-size: 16px;
+}
+
+.modal {
+  display: none; /* Escondido por padrão */
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 15% auto; /* 15% do topo e centralizado */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+#confirmar {
+  background-color: #ff0000;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#cancelar {
+  background-color: #ccc;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+#confirmar:hover {
+  background-color: #dc143c;
+}
+
+#cancelar:hover {
+  background-color: #bbb;
+}
