@@ -5,15 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lista de Clientes</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/footer.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
   </head>
   <body>
-    <h1>Lista de Clientes</h1>
     <header>
-      <a href="/novo">
-        <button>Novo Cliente</button>
+      <a href="/" class="logo-link">
+        <i class="fas fa-list"></i>
+        <h1>Lista de Clientes</h1>
       </a>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Pesquisar por nome..."
+        />
+        <button id="searchButton">Pesquisar</button>
+      </div>
     </header>
-    <table>
+
+    <!-- Tabela de clientes -->
+    <table id="clientesTable">
       <thead>
         <tr>
           <th>ID</th>
@@ -26,7 +41,7 @@
           <th class="centralizado">Ações</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="clientesTableBody">
         <% clientes.forEach(cliente => { %>
         <tr>
           <td><%= cliente.id %></td>
@@ -57,7 +72,40 @@
       </tbody>
     </table>
 
-    <!-- Modal de Confirmação -->
+    <div id="noResultsMessage" class="no-results" style="display: none">
+      Nenhum cliente encontrado.
+    </div>
+
+    <!-- Botão "Novo Cliente" -->
+    <div class="novo-cliente-container">
+      <a href="/novo">
+        <button>Novo Cliente</button>
+      </a>
+    </div>
+
+    <!-- Botão "Voltar" -->
+    <div
+      id="backButtonContainer"
+      style="display: none; text-align: center; margin-top: 20px"
+    >
+      <button id="backButton" onclick="window.location.href='/'">Voltar</button>
+    </div>
+
+    <!-- Paginação -->
+    <div class="pagination">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/?page=<%= i %>" class="<%= i === page ? 'active' : '' %>"
+        ><%= i %></a
+      >
+      <% } %>
+    </div>
+
+    <!-- Botão "Sair" -->
+    <a href="/logout">
+      <button class="sair">Sair</button>
+    </a>
+
+    <!-- Modal de confirmação de exclusão -->
     <div id="modalConfirmacao" class="modal">
       <div class="modal-content">
         <p>Deseja excluir este cliente?</p>
@@ -66,7 +114,124 @@
       </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+      <p>
+        Desenvolvido por
+        <a href="https://github.com/pedroOlvPinheiro" target="_blank"
+          >Pedro Ariel</a
+        >
+        e
+        <a href="https://github.com/VictorJoseQM" target="_blank"
+          >Victor José</a
+        >
+      </p>
+    </footer>
+
     <script>
+      // Variáveis globais para os resultados da busca
+      let searchResults = [];
+      let currentSearchPage = 1;
+      const limit = 4;
+
+      // Função para renderizar os resultados paginados da busca
+      function renderSearchResults(page, results) {
+        const startIndex = (page - 1) * limit;
+        const paginatedResults = results.slice(startIndex, startIndex + limit);
+
+        // Atualiza a tabela com os resultados paginados
+        const clientesTableBody = document.getElementById("clientesTableBody");
+        clientesTableBody.innerHTML = "";
+        paginatedResults.forEach((cliente) => {
+          const row = `
+            <tr>
+              <td>${cliente.id}</td>
+              <td>${cliente.nome}</td>
+              <td>${cliente.nascimento}</td>
+              <td>${cliente.cpf}</td>
+              <td>${cliente.endereco}</td>
+              <td>${cliente.telefone}</td>
+              <td>${cliente.email}</td>
+              <td class="centralizado">
+                <form action="/editar/${cliente.id}" method="GET" style="display: inline">
+                  <button type="submit" class="editar">Editar</button>
+                </form>
+                <button type="button" class="excluir" onclick="confirmarExclusao('${cliente.id}')">Excluir</button>
+              </td>
+            </tr>
+          `;
+          clientesTableBody.innerHTML += row;
+        });
+
+        // Cria a paginação baseada nos resultados da busca
+        const paginationDiv = document.querySelector(".pagination");
+        paginationDiv.innerHTML = "";
+        const totalPages = Math.ceil(results.length / limit);
+
+        for (let i = 1; i <= totalPages; i++) {
+          const link = document.createElement("a");
+          link.href = "#";
+          link.textContent = i;
+          if (i === page) {
+            link.classList.add("active");
+          }
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            currentSearchPage = i;
+            renderSearchResults(i, results);
+          });
+          paginationDiv.appendChild(link);
+        }
+      }
+
+      // Função para buscar clientes pelo nome
+      async function buscarClientes() {
+        const nome = document.getElementById("searchInput").value.trim();
+        if (nome === "") {
+          window.location.reload();
+          return;
+        }
+        try {
+          const response = await fetch(
+            `/api/clientes/buscar-por-nome?nome=${encodeURIComponent(nome)}`
+          );
+          const results = await response.json();
+          searchResults = results;
+          currentSearchPage = 1;
+
+          if (results.length > 0) {
+            renderSearchResults(currentSearchPage, searchResults);
+            document.getElementById("noResultsMessage").style.display = "none";
+            document.getElementById("clientesTable").style.display = "";
+            document.getElementById("backButtonContainer").style.display =
+              "block";
+          } else {
+            document.getElementById("noResultsMessage").style.display = "block";
+            document.getElementById("clientesTable").style.display = "none";
+            document.getElementById("backButtonContainer").style.display =
+              "block";
+            // Limpa a paginação se não houver resultados
+            document.querySelector(".pagination").innerHTML = "";
+          }
+        } catch (error) {
+          console.error("Erro ao buscar clientes:", error);
+          alert("Erro ao buscar clientes. Tente novamente.");
+        }
+      }
+
+      // Eventos para busca (clique e tecla Enter)
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", buscarClientes);
+      document
+        .getElementById("searchInput")
+        .addEventListener("keyup", function (event) {
+          if (event.key === "Enter") {
+            buscarClientes();
+          }
+        });
+
+      // Função para confirmação de exclusão (permanece inalterada)
       function confirmarExclusao(clienteId) {
         var modal = document.getElementById("modalConfirmacao");
         modal.style.display = "block";

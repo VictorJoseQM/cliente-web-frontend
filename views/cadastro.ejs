@@ -4,30 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Novo Cliente</title>
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/form.css" />
   </head>
   <body>
-    <h1>Cadastrar Novo Cliente</h1>
-    <form action="/novo" method="POST">
-      <label for="nome">Nome:</label><br />
-      <input type="text" name="nome" id="nome" required /><br />
-      <label for="nascimento">Data de Nascimento:</label><br />
-      <input
-        type="date"
-        name="nascimento"
-        id="nascimento"
-        placeholder="Nascimento"
-        required
-      /><br />
-      <label for="cpf">CPF:</label><br />
-      <input type="text" name="cpf" id="cpf" required /><br />
-      <label for="endereco">Endereço:</label><br />
-      <input type="text" name="endereco" id="endereco" required /><br />
-      <label for="telefone">Telefone:</label><br />
-      <input type="text" name="telefone" id="telefone" required /><br />
-      <label for="email">Email:</label><br />
-      <input type="email" name="email" id="email" required /><br />
-      <button type="submit" class="cadastrar">Cadastrar</button>
-    </form>
+    <div class="form-container">
+      <a href="/" class="btn-voltar"> Voltar</a>
+      <h1>Cadastrar Novo Cliente</h1>
+      <form action="/novo" method="POST">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" name="nome" id="nome" required />
+        </div>
+        <div class="form-group">
+          <label for="nascimento">Data de Nascimento:</label>
+          <input type="date" name="nascimento" id="nascimento" required />
+        </div>
+        <div class="form-group">
+          <label for="cpf">CPF:</label>
+          <input type="text" name="cpf" id="cpf" required />
+        </div>
+        <div class="form-group">
+          <label for="endereco">Endereço:</label>
+          <input type="text" name="endereco" id="endereco" required />
+        </div>
+        <div class="form-group">
+          <label for="telefone">Telefone:</label>
+          <input type="text" name="telefone" id="telefone" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" required />
+        </div>
+        <button type="submit" class="cadastrar">Cadastrar</button>
+      </form>
+    </div>
   </body>
 </html>
