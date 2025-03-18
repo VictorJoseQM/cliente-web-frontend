@@ -3,7 +3,7 @@ const axios = require("axios");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const app = express();
-// Configurações do Express
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
@@ -11,7 +11,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
   })
-);
+); // As sessões são mantidas no servidor e associadas ao usuário enquanto ele navega pelo site.
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -55,10 +55,12 @@ app.get("/logout", (req, res) => {
   });
 });
 
-// Rotas protegidas
+// URL da API
 const apiUrl = "http://localhost:8080/api/clientes";
 
-// Rota para requisitar buscar cliente pelo nome na API
+// Rotas protegidas
+
+// Rota para requisição de busca de cliente pelo nome na API
 app.get("/api/clientes/buscar-por-nome", requireAuth, async (req, res) => {
   const { nome } = req.query;
 
